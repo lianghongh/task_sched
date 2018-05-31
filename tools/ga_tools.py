@@ -23,7 +23,7 @@ def dosimpleGA(graph,pe_size,pop_size,cxpb,mutpb,ngen,select_factor):
     toolbox.register('mate',tools.cxTwoPoint)
     toolbox.register('mutate',tools.mutUniformInt,low=0,up=IND_SIZE-1,indpb=1)
     toolbox.register('select',tools.selRoulette)
-    toolbox.register('evalute',_fitness)
+    toolbox.register('evalute',partial(_fitness,graph=graph))
 
     stat=tools.Statistics(key=lambda x:x.fitness.values)
     stat.register('avg',np.mean)
