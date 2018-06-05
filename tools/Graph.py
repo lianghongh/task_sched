@@ -6,6 +6,8 @@ class TaskNode:
         self.type=None
         self.exec_time=None
         self.next=None
+        self.in_degree=0
+        self.out_degree=0
 
     def __repr__(self):
         l = list()
@@ -14,7 +16,7 @@ class TaskNode:
             l.append(str(p))
             p = p.next
         arc='['+','.join(l)+']'
-        return '[task:' + str(self.task) + ', exec_time:' + str(self.exec_time) + ', deadline:' + str(self.deadline) + ", type:" + str(self.type) + ", arc_node:" + arc + "]"
+        return '[task:' + str(self.task) + ', exec_time:' + str(self.exec_time) + ', in_degree:'+str(self.in_degree)+', out_degree:'+str(self.out_degree)+', deadline:' + str(self.deadline) + ", type:" + str(self.type) + ", arc_node:" + arc + "]"
 
 
 
@@ -52,6 +54,8 @@ class TaskGraph:
         arc.next=self.nodes[from_node].next
         self.nodes[from_node].next=arc
         self.arc_num+=1
+        self.nodes[from_node].out_degree+=1
+        self.nodes[to_node].in_degree+=1
 
 
     def __repr__(self):
