@@ -8,6 +8,7 @@ class TaskNode:
         self.next=None
         self.in_degree=0
         self.out_degree=0
+        self.rank_u=None
 
     def __repr__(self):
         l = list()
@@ -16,7 +17,7 @@ class TaskNode:
             l.append(str(p))
             p = p.next
         arc='['+','.join(l)+']'
-        return '[task:' + str(self.task) + ', exec_time:' + str(self.exec_time) + ', in_degree:'+str(self.in_degree)+', out_degree:'+str(self.out_degree)+', deadline:' + str(self.deadline) + ", type:" + str(self.type) + ", arc_node:" + arc + "]"
+        return '[task:' + str(self.task) + ', exec_time:' + str(self.exec_time) + ', rank_u:'+'%.4f' % (self.rank_u,)+', in_degree:'+str(self.in_degree)+', out_degree:'+str(self.out_degree)+', deadline:' + str(self.deadline) + ", type:" + str(self.type) + ", arc_node:" + arc + "]"
 
 
 
@@ -56,6 +57,26 @@ class TaskGraph:
         self.arc_num+=1
         self.nodes[from_node].out_degree+=1
         self.nodes[to_node].in_degree+=1
+
+    def update_rank_u(self):
+        for i in self.nodes:
+            if i.in_degree==0:
+                i.rank_u=self._rank_u(i)
+
+
+    def _rank_u(self,node:TaskNode):
+        if node.out_degree==0:
+            node.rank_u=node.exec_time
+            return node.rank_u
+        max_u=0
+        arc=node.next
+        while arc!=None:
+            self.nodes[arc.task].rank_u=self._rank_u(self.nodes[arc.task])
+            dd=arc.weight+self.nodes[arc.task].rank_u
+            if dd>max_u:
+                max_u=dd
+            arc=arc.next
+        return max_u+node.exec_time
 
 
     def __repr__(self):
