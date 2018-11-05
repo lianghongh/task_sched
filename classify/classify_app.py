@@ -9,7 +9,7 @@ def read(fp):
             line=f.readline()
     return r
 
-def classify_app(miss_rate,pth,cth):
+def classify_app(miss_rate,pth,ps,cth):
     """
     IS:密集流型
     IF:密集友好型
@@ -34,7 +34,7 @@ def classify_app(miss_rate,pth,cth):
             if p<0:
                 return "SS"
         for c in range(cth+1,11):
-            if cy[c]<=pth:
+            if cy[c]<=ps:
                 return "SF"
         return "SS"
     else:
@@ -42,22 +42,22 @@ def classify_app(miss_rate,pth,cth):
             if p<0:
                 return "IS"
         for c in range(cth+1,11):
-            if cy[c]<=pth:
+            if cy[c]<=ps:
                 return "IF"
         return "IS"
 
 
 
-def do_classify(pth,cth):
+def do_classify(pth,ps,cth):
     dir = "/Users/lianghong/Downloads/gem5_result"
     name = ["bwaves", "gamess", "gromacs", "hmmer", "leslie3d", "mcf", "sjeng", "astar", "bzip2", "calculix", "gobmk",
             "h264ref", "lbm", "libquantum", "milc", "namd", "soplex", "tonto", "zeusmp", "omnetpp", "GemsFDTD"]
     for i in name:
         file = dir + "/" + i + "/miss_rate"
         miss_rate = read(file)
-        t=classify_app(miss_rate,pth,cth)
+        t=classify_app(miss_rate,pth,ps,cth)
         print("%s : %s" %(i,t))
 
 
 if __name__=="__main__":
-    do_classify(0.3,8)
+    do_classify(pth=0.3,ps=0.1,cth=8)
